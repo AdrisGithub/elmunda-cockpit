@@ -31,12 +31,16 @@ width value =
 
 height : String -> Attribute msg
 height value =
-    Attributes.property "height" (Encode.string value)
+    value
+        |> Encode.string
+        |> Attributes.property "height"
 
 
 status : List ActivityStatus -> Attribute msg
 status value =
-    Attributes.property "activity_status" (Encode.list statusToJson value)
+    value
+        |> Encode.list statusToJson
+        |> Attributes.property "activity_status"
 
 
 onClick : (String -> Msg) -> Attribute Msg

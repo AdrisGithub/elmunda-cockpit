@@ -77,13 +77,19 @@ view model =
         [ button [ onClick Decrement ] [ text "-" ]
         , div [] [ text (String.fromInt model) ]
         , button [ onClick Increment ] [ text "+" ]
-        , bpmnIoWc
-            [ wcWidth "2000px"
-            , wcHeight "1000px"
-            , wcStatus
-                [ ActivityStatus "Do_Something_Activity" model model
-                , ActivityStatus "Start_Activity" 1 0
-                ]
+        , div
+            [ Attributes.style "border" "1px solid black"
+            , Attributes.style "width" "1000px"
+            , Attributes.style "height" "600px"
             ]
-            []
+            [ bpmnIoWc
+                [ wcWidth "1000px"
+                , wcHeight "600px"
+                , wcStatus
+                    [ ActivityStatus "Do_Something_Activity" model model
+                    , ActivityStatus "Start_Activity" 1 0
+                    ]
+                ]
+                []
+            ]
         ]

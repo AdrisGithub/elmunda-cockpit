@@ -12,13 +12,16 @@
     border-radius: 25%;
     border: 1px solid black;
 }
+
 .process-instance-count p {
     padding: 0 0 0 0;
     margin: 0 3px 0 3px;
 }
+
 .process-instance-count > :nth-child(1) {
     color: blue;
 }
+
 .process-instance-count > :nth-child(2) {
     color: red;
 }

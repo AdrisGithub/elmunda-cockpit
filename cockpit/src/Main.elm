@@ -1,7 +1,7 @@
 module Main exposing (..)
 
 import Browser
-import Html exposing (Html, button, div, text)
+import Html exposing (Attribute, Html, button, div, text)
 import Html.Events exposing (onClick)
 
 
@@ -33,10 +33,16 @@ update msg model =
             model - 1
 
 
+bpmnIoWc : List (Attribute msg) -> List (Html msg) -> Html msg
+bpmnIoWc =
+    Html.node "bpmn-io-wc"
+
+
 view : Model -> Html Msg
 view model =
     div []
         [ button [ onClick Decrement ] [ text "-" ]
         , div [] [ text (String.fromInt model) ]
         , button [ onClick Increment ] [ text "+" ]
+        , bpmnIoWc [] []
         ]

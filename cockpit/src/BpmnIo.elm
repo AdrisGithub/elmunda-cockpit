@@ -1,4 +1,4 @@
-module BpmnIo exposing (..)
+module BpmnIo exposing (ActivityStatus, statusToJson, view)
 
 import Html exposing (Attribute, Html, div)
 import Html.Attributes as Attributes

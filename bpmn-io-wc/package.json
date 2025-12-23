@@ -1,0 +1,13 @@
+{
+  "name": "bpmn-io-wc",
+  "version": "1.0.0",
+  "description": "Webcomponent for BPMN-IO Integration via. a Browser Custom Element",
+  "source": "src/index.ts",
+  "main": "dist/main.js",
+  "module": "dist/module.js",
+  "types": "dist/types.d.ts",
+  "scripts": {
+    "watch": "parcel watch",
+    "build": "parcel build"
+  }
+}

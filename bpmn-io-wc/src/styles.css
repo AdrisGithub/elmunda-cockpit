@@ -1,2 +1,6 @@
 @import "npm:bpmn-js/dist/assets/bpmn-js.css";
 @import "npm:bpmn-js/dist/assets/diagram-js.css";
+
+.djs-element.djs-shape.hover:not(.djs-connection) .djs-visual > :nth-child(1) {
+    fill: lightgray !important; /* color elements gray when hovered */
+}

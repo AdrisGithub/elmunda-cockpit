@@ -2,6 +2,7 @@ import {default as BpmnViewerInternal} from 'bpmn-js/lib/NavigatedViewer';
 import {default as OutlineModule} from 'bpmn-js/lib/features/outline/index';
 // @ts-ignore temporary should load the bpmn from remote
 import bpmnText from 'bundle-text:../../examples/test.bpmn';
+import {Canvas} from "bpmn-js/lib/features/context-pad/ContextPadProvider";
 
 export class BpmnIOIntegrationElement extends HTMLElement {
 
@@ -19,7 +20,7 @@ export class BpmnIOIntegrationElement extends HTMLElement {
             additionalModules: [OutlineModule]
         })
         this.bpmn.importXML(bpmnText)
-            .then(_ => this.bpmn.get('canvas').zoom('fit-viewport'))
+            .then(_ => this.bpmn.get<Canvas>('canvas').zoom('fit-viewport'))
             .then(value => this.removeBPMNTrademark())
     }
 

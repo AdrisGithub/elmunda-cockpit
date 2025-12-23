@@ -15,6 +15,13 @@ type alias Model =
     Int
 
 
+type alias ActivityStatus =
+    { name : String
+    , errors : Int
+    , instances : Int
+    }
+
+
 init : Model
 init =
     0
@@ -50,9 +57,18 @@ wcHeight height =
     Attributes.property "height" (Encode.string height)
 
 
-wcCount : Int -> Attribute msg
-wcCount count =
-    Attributes.property "count" (Encode.int count)
+wcStatus : ActivityStatus -> Attribute msg
+wcStatus status =
+    Attributes.property "activity_status" (statusToJson status)
+
+
+statusToJson : ActivityStatus -> Encode.Value
+statusToJson status =
+    Encode.object
+        [ ( "name", Encode.string status.name )
+        , ( "errors", Encode.int status.errors )
+        , ( "instances", Encode.int status.instances )
+        ]
 
 
 view : Model -> Html Msg
@@ -64,7 +80,7 @@ view model =
         , bpmnIoWc
             [ wcWidth "2000px"
             , wcHeight "1000px"
-            , wcCount model
+            , wcStatus (ActivityStatus "Do_Something_Activity" model model)
             ]
             []
         ]

@@ -11,7 +11,7 @@ export class BpmnIOIntegrationElement extends HTMLElement implements WebComponen
     hookNode: HTMLDivElement;
     _width: string;
     _height: string;
-    _count: number;
+    _status: ActivityStatus[] = [];
     _initialized: boolean;
 
     readonly trademark_id = "bjs-powered-by";
@@ -32,27 +32,24 @@ export class BpmnIOIntegrationElement extends HTMLElement implements WebComponen
     }
 
     importXml() {
-        const status = {
-            name: 'Do_Something_Activity',
-            errorCount: Math.round(this._count / 2),
-            runningInstances: this._count
-        } as ActivityStatus;
         this.bpmn.importXML(bpmnText)
             .then(_ => this.canvas.zoom('fit-viewport'))
-            .then(_ => this.addProcessInstanceOverlays(status))
             .then(_ => this.removeBPMNTrademark())
+            .then(_ => this.addProcessInstanceOverlays(this._status))
             .then(_ => this._initialized = true)
     }
 
-    addProcessInstanceOverlays(activity: ActivityStatus) {
-        this.overlays.remove({element: activity.name});
-        this.overlays.add(activity.name, 'process_instances_indicator', {
-            position: {
-                top: 70,
-                left: 70
-            },
-            html: `<div class="process-instance-count"><p>${activity.runningInstances}</p><p>${activity.errorCount}</p></div>`
-        })
+    addProcessInstanceOverlays(activities: ActivityStatus[]) {
+        for (const activity of activities) {
+            this.overlays.remove({element: activity.name});
+            this.overlays.add(activity.name, 'process_instances_indicator', {
+                position: {
+                    top: 70,
+                    left: 70
+                },
+                html: `<div class="process-instance-count"><p>${activity.instances}</p><p>${activity.errors}</p></div>`
+            })
+        }
     }
 
     get overlays() {
@@ -88,15 +85,10 @@ export class BpmnIOIntegrationElement extends HTMLElement implements WebComponen
         this._height = value;
     }
 
-    set count(value: number) {
-        this._count = value;
+    set activity_status(value: ActivityStatus) {
+        this._status = [value];
         if (this._initialized) {
-            const status = {
-                name: 'Do_Something_Activity',
-                errorCount: Math.round(value / 2),
-                runningInstances: value
-            } as ActivityStatus;
-            this.addProcessInstanceOverlays(status)
+            this.addProcessInstanceOverlays(this._status)
         }
     }
 }
@@ -106,13 +98,13 @@ interface WebComponent {
     connectedCallback: () => void
     width: string
     height: string
-    count: number
+    activity_status: ActivityStatus
 }
 
 interface ActivityStatus {
     name: string,
-    errorCount: number,
-    runningInstances: number,
+    errors: number,
+    instances: number,
 }
 
 export const wc_id = "bpmn-io-wc";

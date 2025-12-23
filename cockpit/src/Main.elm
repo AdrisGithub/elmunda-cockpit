@@ -57,9 +57,9 @@ wcHeight height =
     Attributes.property "height" (Encode.string height)
 
 
-wcStatus : ActivityStatus -> Attribute msg
+wcStatus : List ActivityStatus -> Attribute msg
 wcStatus status =
-    Attributes.property "activity_status" (statusToJson status)
+    Attributes.property "activity_status" (Encode.list statusToJson status)
 
 
 statusToJson : ActivityStatus -> Encode.Value
@@ -80,7 +80,10 @@ view model =
         , bpmnIoWc
             [ wcWidth "2000px"
             , wcHeight "1000px"
-            , wcStatus (ActivityStatus "Do_Something_Activity" model model)
+            , wcStatus
+                [ ActivityStatus "Do_Something_Activity" model model
+                , ActivityStatus "Start_Activity" 1 0
+                ]
             ]
             []
         ]

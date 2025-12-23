@@ -85,10 +85,10 @@ export class BpmnIOIntegrationElement extends HTMLElement implements WebComponen
         this._height = value;
     }
 
-    set activity_status(value: ActivityStatus) {
-        this._status = [value];
+    set activity_status(value: ActivityStatus[]) {
+        this._status = value;
         if (this._initialized) {
-            this.addProcessInstanceOverlays(this._status)
+            this.addProcessInstanceOverlays(value)
         }
     }
 }
@@ -98,7 +98,7 @@ interface WebComponent {
     connectedCallback: () => void
     width: string
     height: string
-    activity_status: ActivityStatus
+    activity_status: ActivityStatus[]
 }
 
 interface ActivityStatus {

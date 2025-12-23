@@ -8,7 +8,9 @@ type Msg
 
 
 type alias Model =
-    Int
+    { count : Int
+    , clickedThing : Maybe ClickEvent
+    }
 
 
 type alias ActivityStatus =

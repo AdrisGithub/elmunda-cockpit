@@ -4,6 +4,7 @@ import {default as OutlineModule} from 'bpmn-js/lib/features/outline/index';
 import bpmnText from 'bundle-text:../../examples/test.bpmn';
 import {default as Canvas} from "diagram-js/lib/core/Canvas";
 import {default as Overlays} from 'diagram-js/lib/features/overlays/Overlays';
+import {default as EventBus} from 'diagram-js/lib/core/EventBus';
 
 export class BpmnIOIntegrationElement extends HTMLElement implements WebComponent {
 
@@ -33,16 +34,18 @@ export class BpmnIOIntegrationElement extends HTMLElement implements WebComponen
 
     importXml() {
         this.bpmn.importXML(bpmnText)
+            .then(_ => this._initialized = true)
             .then(_ => this.canvas.zoom('fit-viewport'))
             .then(_ => this.removeBPMNTrademark())
-            .then(_ => this.addProcessInstanceOverlays(this._status))
-            .then(_ => this._initialized = true)
+            .then(_ => this.addProcessInstanceOverlays())
+            .then(_ => this.registerEvents())
     }
 
-    addProcessInstanceOverlays(activities: ActivityStatus[]) {
-        for (const activity of activities) {
-            this.overlays.remove({element: activity.name});
-            this.overlays.add(activity.name, 'process_instances_indicator', {
+    addProcessInstanceOverlays() {
+        const overlays = this.overlays;
+        for (const activity of this._status) {
+            overlays.remove({element: activity.name});
+            overlays.add(activity.name, 'process_instances_indicator', {
                 position: {
                     top: 70,
                     left: 70
@@ -52,8 +55,19 @@ export class BpmnIOIntegrationElement extends HTMLElement implements WebComponen
         }
     }
 
+    registerEvents() {
+        this.eventBus.on("element.click", (event) => {
+            console.log(event)
+            this.dispatchEvent(new CustomEvent('bpmnClick', {detail: event}))
+        })
+    }
+
     get overlays() {
         return this.bpmn.get<Overlays>("overlays");
+    }
+
+    get eventBus() {
+        return this.bpmn.get<EventBus>('eventBus');
     }
 
     get canvas() {
@@ -86,9 +100,9 @@ export class BpmnIOIntegrationElement extends HTMLElement implements WebComponen
     }
 
     set activity_status(value: ActivityStatus[]) {
-        this._status = value;
+        this._status = value ?? [];
         if (this._initialized) {
-            this.addProcessInstanceOverlays(value)
+            this.addProcessInstanceOverlays()
         }
     }
 }

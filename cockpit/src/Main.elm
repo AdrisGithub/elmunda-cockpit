@@ -1,27 +1,19 @@
 module Main exposing (..)
 
-import BpmnIo as Wc exposing (ActivityStatus)
+import BpmnIo as Wc
 import Browser exposing (..)
 import Html exposing (Attribute, Html, button, div, text)
 import Html.Events exposing (onClick)
+import Types exposing (..)
 
 
 main =
     Browser.sandbox { init = init, update = update, view = view }
 
 
-type alias Model =
-    Int
-
-
 init : Model
 init =
     0
-
-
-type Msg
-    = Increment
-    | Decrement
 
 
 update : Msg -> Model -> Model
@@ -32,6 +24,9 @@ update msg model =
 
         Decrement ->
             model - 1
+
+        ClickedActivity _ ->
+            model
 
 
 view : Model -> Html Msg

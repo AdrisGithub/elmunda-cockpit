@@ -1,15 +1,11 @@
-module BpmnIo exposing (ActivityStatus, statusToJson, view)
+module BpmnIo exposing (statusToJson, view)
 
 import Html exposing (Attribute, Html, div)
 import Html.Attributes as Attributes
+import Html.Events exposing (on)
+import Json.Decode as Decode
 import Json.Encode as Encode
-
-
-type alias ActivityStatus =
-    { name : String
-    , errors : Int
-    , instances : Int
-    }
+import Types exposing (..)
 
 
 statusToJson : ActivityStatus -> Encode.Value
@@ -41,7 +37,12 @@ status value =
     Attributes.property "activity_status" (Encode.list statusToJson value)
 
 
-view : String -> String -> List ActivityStatus -> Html msg
+onClick : msg -> Attribute msg
+onClick msg =
+    on "bpmnClick" (Decode.succeed msg)
+
+
+view : String -> String -> List ActivityStatus -> Html Msg
 view internalWidth internalHeight states =
     div
         [ Attributes.style "border" "1px solid black"
@@ -52,6 +53,7 @@ view internalWidth internalHeight states =
             [ width internalWidth
             , height internalHeight
             , status states
+            , onClick (ClickedActivity "lol")
             ]
             []
         ]

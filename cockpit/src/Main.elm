@@ -1,4 +1,4 @@
-module Main exposing (..)
+module Main exposing (init, main, update, view)
 
 import BpmnIo as Wc
 import Browser exposing (..)

@@ -1,0 +1,17 @@
+{
+  "name": "cockpit",
+  "version": "1.0.0",
+  "description": "",
+  "source": "build/index.html",
+  "scripts": {
+    "watch": "parcel",
+    "build": "parcel build",
+    "elm": "elm"
+  },
+  "dependencies": {
+    "bpmn-io-wc": "*"
+  },
+  "devDependencies": {
+    "elm": "^0.19.1-6"
+  }
+}

@@ -4,3 +4,21 @@
 .djs-element.djs-shape.hover:not(.djs-connection) .djs-visual > :nth-child(1) {
     fill: lightgray !important; /* color elements gray when hovered */
 }
+
+.process-instance-count {
+    display: flex;
+    background: white;
+    padding: 1px 1px 1px 1px;
+    border-radius: 25%;
+    border: 1px solid black;
+}
+.process-instance-count p {
+    padding: 0 0 0 0;
+    margin: 0 3px 0 3px;
+}
+.process-instance-count > :nth-child(1) {
+    color: blue;
+}
+.process-instance-count > :nth-child(2) {
+    color: red;
+}

@@ -1,10 +1,9 @@
 module Main exposing (..)
 
-import Browser
+import BpmnIo as Wc exposing (ActivityStatus)
+import Browser exposing (..)
 import Html exposing (Attribute, Html, button, div, text)
-import Html.Attributes as Attributes
 import Html.Events exposing (onClick)
-import Json.Encode as Encode
 
 
 main =
@@ -13,13 +12,6 @@ main =
 
 type alias Model =
     Int
-
-
-type alias ActivityStatus =
-    { name : String
-    , errors : Int
-    , instances : Int
-    }
 
 
 init : Model
@@ -42,54 +34,16 @@ update msg model =
             model - 1
 
 
-bpmnIoWc : List (Attribute msg) -> List (Html msg) -> Html msg
-bpmnIoWc =
-    Html.node "bpmn-io-wc"
-
-
-wcWidth : String -> Attribute msg
-wcWidth width =
-    Attributes.property "width" (Encode.string width)
-
-
-wcHeight : String -> Attribute msg
-wcHeight height =
-    Attributes.property "height" (Encode.string height)
-
-
-wcStatus : List ActivityStatus -> Attribute msg
-wcStatus status =
-    Attributes.property "activity_status" (Encode.list statusToJson status)
-
-
-statusToJson : ActivityStatus -> Encode.Value
-statusToJson status =
-    Encode.object
-        [ ( "name", Encode.string status.name )
-        , ( "errors", Encode.int status.errors )
-        , ( "instances", Encode.int status.instances )
-        ]
-
-
 view : Model -> Html Msg
 view model =
     div []
         [ button [ onClick Decrement ] [ text "-" ]
         , div [] [ text (String.fromInt model) ]
         , button [ onClick Increment ] [ text "+" ]
-        , div
-            [ Attributes.style "border" "1px solid black"
-            , Attributes.style "width" "1000px"
-            , Attributes.style "height" "600px"
-            ]
-            [ bpmnIoWc
-                [ wcWidth "1000px"
-                , wcHeight "600px"
-                , wcStatus
-                    [ ActivityStatus "Do_Something_Activity" model model
-                    , ActivityStatus "Start_Activity" 1 0
-                    ]
-                ]
-                []
+        , Wc.view
+            "1000px"
+            "600px"
+            [ ActivityStatus "Do_Something_Activity" model model
+            , ActivityStatus "Start_Activity" 1 0
             ]
         ]

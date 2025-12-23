@@ -1,8 +1,8 @@
-import { BpmnIOIntegrationElement } from './webcomponent';
+import {BpmnIOIntegrationElement, wc_id} from './webcomponent';
 import './styles.css'
 
 export function registerWebcomponent() {
-    if(!customElements.get("bpmn-io-wc")) {
-        customElements.define("bpmn-io-wc", BpmnIOIntegrationElement)
+    if(!customElements.get(wc_id)) {
+        customElements.define(wc_id, BpmnIOIntegrationElement)
     }
 }

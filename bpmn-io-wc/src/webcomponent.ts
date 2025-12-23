@@ -8,10 +8,12 @@ export class BpmnIOIntegrationElement extends HTMLElement {
     bpmn: BpmnViewerInternal;
     hookNode: HTMLDivElement;
 
+    readonly trademark_id = "bjs-powered-by";
+
     connectedCallback() {
         this.hookNode = this.appendChild(this.createHookNode())
         this.bpmn = new BpmnViewerInternal({
-            container: "#bpmn-io-wc",
+            container: `#${wc_id}`,
             height: 600,
             width: 1000,
             additionalModules: [OutlineModule]
@@ -22,7 +24,7 @@ export class BpmnIOIntegrationElement extends HTMLElement {
     }
 
     removeBPMNTrademark() {
-        const element = this.getElementsByClassName("bjs-powered-by").item(0)
+        const element = this.getElementsByClassName(this.trademark_id).item(0)
         if (element) {
             element.remove();
         }
@@ -30,8 +32,7 @@ export class BpmnIOIntegrationElement extends HTMLElement {
 
     createHookNode(): HTMLDivElement {
         const div = document.createElement("div");
-        div.className = "canvas";
-        div.id = "bpmn-io-wc"
+        div.id = wc_id;
         return div;
     }
 
@@ -39,3 +40,5 @@ export class BpmnIOIntegrationElement extends HTMLElement {
         this.hookNode.remove()
     }
 }
+
+export const wc_id = "bpmn-io-wc";

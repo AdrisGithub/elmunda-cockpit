@@ -71,6 +71,12 @@ parseProcessType raw =
         "bpmn:ServiceTask" ->
             Decode.succeed ServiceTask
 
+        "bpmn:EndEvent" ->
+            Decode.succeed EndEvent
+
+        "bpmn:StartEvent" ->
+            Decode.succeed StartEvent
+
         _ ->
             Decode.fail "Invalid ProcessType"
 

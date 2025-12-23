@@ -23,6 +23,8 @@ type alias ActivityStatus =
 type ProcessType
     = ServiceTask
     | Process
+    | EndEvent
+    | StartEvent
 
 
 type alias ClickEvent =

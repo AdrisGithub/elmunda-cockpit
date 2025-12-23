@@ -11,6 +11,8 @@ export class BpmnIOIntegrationElement extends HTMLElement {
     hookNode: HTMLDivElement;
     _width: string;
     _height: string;
+    _count: number;
+    _initialized: boolean;
 
     readonly trademark_id = "bjs-powered-by";
 
@@ -32,16 +34,18 @@ export class BpmnIOIntegrationElement extends HTMLElement {
     importXml() {
         const status = {
             name: 'Do_Something_Activity',
-            errorCount: 1,
-            runningInstances: 1
+            errorCount: Math.round(this._count / 2),
+            runningInstances: this._count
         } as ActivityStatus;
         this.bpmn.importXML(bpmnText)
             .then(_ => this.canvas.zoom('fit-viewport'))
             .then(_ => this.addProcessInstanceOverlays(status))
             .then(_ => this.removeBPMNTrademark())
+            .then(_ => this._initialized = true)
     }
 
     addProcessInstanceOverlays(activity: ActivityStatus) {
+        this.overlays.remove({element: activity.name});
         this.overlays.add(activity.name, 'process_instances_indicator', {
             position: {
                 top: 70,
@@ -82,6 +86,18 @@ export class BpmnIOIntegrationElement extends HTMLElement {
 
     set height(value: string) {
         this._height = value;
+    }
+
+    set count(value: number) {
+        this._count = value;
+        if (this._initialized) {
+            const status = {
+                name: 'Do_Something_Activity',
+                errorCount: Math.round(value / 2),
+                runningInstances: value
+            } as ActivityStatus;
+            this.addProcessInstanceOverlays(status)
+        }
     }
 }
 

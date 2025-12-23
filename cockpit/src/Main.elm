@@ -50,6 +50,11 @@ wcHeight height =
     Attributes.property "height" (Encode.string height)
 
 
+wcCount : Int -> Attribute msg
+wcCount count =
+    Attributes.property "count" (Encode.int count)
+
+
 view : Model -> Html Msg
 view model =
     div []
@@ -59,6 +64,7 @@ view model =
         , bpmnIoWc
             [ wcWidth "2000px"
             , wcHeight "1000px"
+            , wcCount model
             ]
             []
         ]

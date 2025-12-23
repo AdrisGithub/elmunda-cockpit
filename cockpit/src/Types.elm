@@ -16,3 +16,9 @@ type alias ActivityStatus =
     , errors : Int
     , instances : Int
     }
+
+
+type alias ClickEvent =
+    { id : String
+    , elemType : String
+    }

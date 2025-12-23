@@ -2,7 +2,7 @@ module BpmnIo exposing (statusToJson, view)
 
 import Html exposing (Attribute, Html, div)
 import Html.Attributes as Attributes
-import Html.Events exposing (on)
+import Html.Events exposing (on, targetValue)
 import Json.Decode as Decode
 import Json.Encode as Encode
 import Types exposing (..)
@@ -24,7 +24,9 @@ bpmnIoWc =
 
 width : String -> Attribute msg
 width value =
-    Attributes.property "width" (Encode.string value)
+    value
+        |> Encode.string
+        |> Attributes.property "width"
 
 
 height : String -> Attribute msg
@@ -37,9 +39,14 @@ status value =
     Attributes.property "activity_status" (Encode.list statusToJson value)
 
 
-onClick : msg -> Attribute msg
-onClick msg =
-    on "bpmnClick" (Decode.succeed msg)
+onClick : (String -> Msg) -> Attribute Msg
+onClick tag =
+    on "bpmnClick" (Decode.map tag clickDecoder)
+
+
+clickDecoder : Decode.Decoder String
+clickDecoder =
+    Decode.at [ "detail", "element", "type" ] Decode.string
 
 
 view : String -> String -> List ActivityStatus -> Html Msg
@@ -53,7 +60,7 @@ view internalWidth internalHeight states =
             [ width internalWidth
             , height internalHeight
             , status states
-            , onClick (ClickedActivity "lol")
+            , onClick ClickedActivity
             ]
             []
         ]

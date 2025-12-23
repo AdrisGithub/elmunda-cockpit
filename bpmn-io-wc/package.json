@@ -9,5 +9,8 @@
   "scripts": {
     "watch": "parcel watch",
     "build": "parcel build"
+  },
+  "dependencies": {
+    "bpmn-js": "^18.9.1"
   }
 }

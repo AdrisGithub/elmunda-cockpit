@@ -3,6 +3,9 @@
     "cockpit",
     "bpmn-io-wc"
   ],
+  "@parcel/resolver-default": {
+    "packageExports": true
+  },
   "devDependencies": {
     "@parcel/packager-ts": "^2.16.3",
     "@parcel/transformer-elm": "^2.16.3",

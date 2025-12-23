@@ -2,8 +2,9 @@ module BpmnIo exposing (statusToJson, view)
 
 import Html exposing (Attribute, Html, div)
 import Html.Attributes as Attributes
-import Html.Events exposing (on, targetValue)
+import Html.Events exposing (on)
 import Json.Decode as Decode
+import Json.Decode.Pipeline exposing (custom)
 import Json.Encode as Encode
 import Types exposing (..)
 
@@ -43,14 +44,33 @@ status value =
         |> Attributes.property "activity_status"
 
 
-onClick : (String -> Msg) -> Attribute Msg
+onClick : (ClickEvent -> Msg) -> Attribute Msg
 onClick tag =
-    on "bpmnClick" (Decode.map tag clickDecoder)
+    on "bpmnClick" (Decode.map tag (Decode.at [ "detail" ] clickDecoder))
 
 
-clickDecoder : Decode.Decoder String
+clickDecoder : Decode.Decoder ClickEvent
 clickDecoder =
-    Decode.at [ "detail", "element", "type" ] Decode.string
+    Decode.succeed ClickEvent
+        |> custom (Decode.at [ "element", "id" ] Decode.string)
+        |> custom (Decode.at [ "element", "type" ] typeDecoder)
+
+
+typeDecoder : Decode.Decoder ProcessType
+typeDecoder =
+    Decode.string
+        |> Decode.andThen
+            (\str ->
+                case str of
+                    "bpmn:Process" ->
+                        Decode.succeed Process
+
+                    "bpmn:ServiceTask" ->
+                        Decode.succeed ServiceTask
+
+                    _ ->
+                        Decode.fail "Invalid ProcessType"
+            )
 
 
 view : String -> String -> List ActivityStatus -> Html Msg

@@ -4,7 +4,7 @@ module Types exposing (..)
 type Msg
     = Increment
     | Decrement
-    | ClickedActivity String
+    | ClickedActivity ClickEvent
 
 
 type alias Model =
@@ -18,7 +18,12 @@ type alias ActivityStatus =
     }
 
 
+type ProcessType
+    = ServiceTask
+    | Process
+
+
 type alias ClickEvent =
     { id : String
-    , elemType : String
+    , elemType : ProcessType
     }

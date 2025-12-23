@@ -4,7 +4,7 @@ import Html exposing (Attribute, Html, div)
 import Html.Attributes as Attributes
 import Html.Events exposing (on)
 import Json.Decode as Decode
-import Json.Decode.Pipeline exposing (custom)
+import Json.Decode.Pipeline exposing (custom, required)
 import Json.Encode as Encode
 import Types exposing (..)
 
@@ -46,31 +46,33 @@ status value =
 
 onClick : (ClickEvent -> Msg) -> Attribute Msg
 onClick tag =
-    on "bpmnClick" (Decode.map tag (Decode.at [ "detail" ] clickDecoder))
+    on "bpmnClick" (Decode.map tag (Decode.at [ "detail", "element" ] clickDecoder))
 
 
 clickDecoder : Decode.Decoder ClickEvent
 clickDecoder =
     Decode.succeed ClickEvent
-        |> custom (Decode.at [ "element", "id" ] Decode.string)
-        |> custom (Decode.at [ "element", "type" ] typeDecoder)
+        |> required "id" Decode.string
+        |> required "type" typeDecoder
 
 
 typeDecoder : Decode.Decoder ProcessType
 typeDecoder =
     Decode.string
-        |> Decode.andThen
-            (\str ->
-                case str of
-                    "bpmn:Process" ->
-                        Decode.succeed Process
+        |> Decode.andThen parseProcessType
 
-                    "bpmn:ServiceTask" ->
-                        Decode.succeed ServiceTask
 
-                    _ ->
-                        Decode.fail "Invalid ProcessType"
-            )
+parseProcessType : String -> Decode.Decoder ProcessType
+parseProcessType raw =
+    case raw of
+        "bpmn:Process" ->
+            Decode.succeed Process
+
+        "bpmn:ServiceTask" ->
+            Decode.succeed ServiceTask
+
+        _ ->
+            Decode.fail "Invalid ProcessType"
 
 
 view : String -> String -> List ActivityStatus -> Html Msg

@@ -2,7 +2,9 @@ module Main exposing (..)
 
 import Browser
 import Html exposing (Attribute, Html, button, div, text)
+import Html.Attributes as Attributes
 import Html.Events exposing (onClick)
+import Json.Encode as Encode
 
 
 main =
@@ -38,11 +40,25 @@ bpmnIoWc =
     Html.node "bpmn-io-wc"
 
 
+wcWidth : String -> Attribute msg
+wcWidth width =
+    Attributes.property "width" (Encode.string width)
+
+
+wcHeight : String -> Attribute msg
+wcHeight height =
+    Attributes.property "height" (Encode.string height)
+
+
 view : Model -> Html Msg
 view model =
     div []
         [ button [ onClick Decrement ] [ text "-" ]
         , div [] [ text (String.fromInt model) ]
         , button [ onClick Increment ] [ text "+" ]
-        , bpmnIoWc [] []
+        , bpmnIoWc
+            [ wcWidth "2000px"
+            , wcHeight "1000px"
+            ]
+            []
         ]

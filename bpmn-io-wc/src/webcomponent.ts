@@ -7,19 +7,32 @@ import {default as Overlays} from 'diagram-js/lib/features/overlays/Overlays';
 
 export class BpmnIOIntegrationElement extends HTMLElement {
 
+    static observedAttributes = ["width", "height"];
+
     bpmn: BpmnViewerInternal;
     hookNode: HTMLDivElement;
+    width: string;
+    height: string;
 
     readonly trademark_id = "bjs-powered-by";
 
     connectedCallback() {
         this.hookNode = this.appendChild(this.createHookNode())
+        this.initBpmnViewer()
+    }
+
+    initBpmnViewer() {
+        console.log(this.height)
         this.bpmn = new BpmnViewerInternal({
             container: `#${wc_id}`,
-            height: 600,
-            width: 1000,
+            height: this.height,
+            width: this.width,
             additionalModules: [OutlineModule]
         })
+        this.importXml();
+    }
+
+    importXml() {
         const status = {
             name: 'Do_Something_Activity',
             errorCount: 1,
@@ -64,6 +77,15 @@ export class BpmnIOIntegrationElement extends HTMLElement {
 
     disconnectedCallback() {
         this.hookNode.remove()
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (name == "width") {
+            this.width = newValue;
+        }
+        if (name == "height") {
+            this.height = newValue;
+        }
     }
 }
 

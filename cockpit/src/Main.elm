@@ -4,6 +4,7 @@ import BpmnIo as Wc
 import Browser exposing (..)
 import Html exposing (Attribute, Html, button, div, text)
 import Html.Events exposing (onClick)
+import Parsing exposing (..)
 import Types exposing (..)
 
 
@@ -43,4 +44,15 @@ view model =
             [ ActivityStatus "Do_Something_Activity" model.count model.count
             , ActivityStatus "Start_Activity" 1 0
             ]
+        , viewClickedBreadCrumb model
         ]
+
+
+viewClickedBreadCrumb : Model -> Html Msg
+viewClickedBreadCrumb model =
+    case model.clickedThing of
+        Just value ->
+            div [] [ text ("Clicked " ++ processTypeToString value.elemType ++ " with id: " ++ value.id) ]
+
+        Nothing ->
+            div [] [ text "Nothing clicked yet" ]

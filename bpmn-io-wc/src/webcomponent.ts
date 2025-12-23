@@ -5,7 +5,7 @@ import bpmnText from 'bundle-text:../../examples/test.bpmn';
 import {default as Canvas} from "diagram-js/lib/core/Canvas";
 import {default as Overlays} from 'diagram-js/lib/features/overlays/Overlays';
 
-export class BpmnIOIntegrationElement extends HTMLElement {
+export class BpmnIOIntegrationElement extends HTMLElement implements WebComponent {
 
     bpmn: BpmnViewerInternal;
     hookNode: HTMLDivElement;
@@ -99,6 +99,14 @@ export class BpmnIOIntegrationElement extends HTMLElement {
             this.addProcessInstanceOverlays(status)
         }
     }
+}
+
+interface WebComponent {
+    disconnectedCallback: () => void,
+    connectedCallback: () => void
+    width: string
+    height: string
+    count: number
 }
 
 interface ActivityStatus {

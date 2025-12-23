@@ -7,12 +7,10 @@ import {default as Overlays} from 'diagram-js/lib/features/overlays/Overlays';
 
 export class BpmnIOIntegrationElement extends HTMLElement {
 
-    static observedAttributes = ["width", "height"];
-
     bpmn: BpmnViewerInternal;
     hookNode: HTMLDivElement;
-    width: string;
-    height: string;
+    _width: string;
+    _height: string;
 
     readonly trademark_id = "bjs-powered-by";
 
@@ -22,11 +20,10 @@ export class BpmnIOIntegrationElement extends HTMLElement {
     }
 
     initBpmnViewer() {
-        console.log(this.height)
         this.bpmn = new BpmnViewerInternal({
             container: `#${wc_id}`,
-            height: this.height,
-            width: this.width,
+            height: this._height,
+            width: this._width,
             additionalModules: [OutlineModule]
         })
         this.importXml();
@@ -41,7 +38,7 @@ export class BpmnIOIntegrationElement extends HTMLElement {
         this.bpmn.importXML(bpmnText)
             .then(_ => this.canvas.zoom('fit-viewport'))
             .then(_ => this.addProcessInstanceOverlays(status))
-            .then(value => this.removeBPMNTrademark())
+            .then(_ => this.removeBPMNTrademark())
     }
 
     addProcessInstanceOverlays(activity: ActivityStatus) {
@@ -79,13 +76,12 @@ export class BpmnIOIntegrationElement extends HTMLElement {
         this.hookNode.remove()
     }
 
-    attributeChangedCallback(name, oldValue, newValue) {
-        if (name == "width") {
-            this.width = newValue;
-        }
-        if (name == "height") {
-            this.height = newValue;
-        }
+    set width(value: string) {
+        this._width = value;
+    }
+
+    set height(value: string) {
+        this._height = value;
     }
 }
 

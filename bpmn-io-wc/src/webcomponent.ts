@@ -56,9 +56,9 @@ export class BpmnIOIntegrationElement extends HTMLElement implements WebComponen
     }
 
     registerEvents() {
-        this.eventBus.on("element.click", (event) => {
-            console.log(event)
-            this.dispatchEvent(new CustomEvent('bpmnClick', {detail: event}))
+        this.eventBus.on("element.click", (value) => {
+            const event = new CustomEvent('bpmnClick', {detail: value});
+            this.dispatchEvent(event)
         })
     }
 

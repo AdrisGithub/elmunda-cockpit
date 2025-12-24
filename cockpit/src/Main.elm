@@ -18,6 +18,7 @@ init _ =
     ( { count = 0
       , clickedThing = Nothing
       , bpmn = Loading
+      , activities = ALoading
       }
     , Http.get
         { url = "http://localhost:8080/test.xml"
@@ -41,10 +42,23 @@ update msg model =
         LoadBpmn bpmn ->
             case bpmn of
                 Ok value ->
-                    ( { model | bpmn = Success value }, Cmd.none )
+                    ( { model | bpmn = Success value }
+                    , Http.get
+                        { url = "http://localhost:8080/instances.json"
+                        , expect = Http.expectJson LoadActivities statusResponseDecoder
+                        }
+                    )
 
                 Err error ->
                     ( { model | bpmn = Error error }, Cmd.none )
+
+        LoadActivities activities ->
+            case activities of
+                Ok value ->
+                    ( { model | activities = ASuccess value.instances }, Cmd.none )
+
+                Err error ->
+                    ( { model | activities = AError error }, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
@@ -70,9 +84,16 @@ viewBpmn model =
             Wc.view
                 "1000px"
                 "600px"
-                [ ActivityStatus "Do_Something_Activity" model.count model.count
-                , ActivityStatus "Start_Activity" 1 0
-                ]
+                (case model.activities of
+                    ASuccess value ->
+                        value
+
+                    AError _ ->
+                        []
+
+                    ALoading ->
+                        []
+                )
                 a
 
         Error err ->

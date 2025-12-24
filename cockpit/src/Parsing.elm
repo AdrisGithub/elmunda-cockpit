@@ -16,6 +16,20 @@ statusToJson state =
         ]
 
 
+statusDecoder : Decode.Decoder ActivityStatus
+statusDecoder =
+    Decode.succeed ActivityStatus
+        |> required "name" Decode.string
+        |> required "errors" Decode.int
+        |> required "instances" Decode.int
+
+
+statusResponseDecoder : Decode.Decoder ActivityStatusResponse
+statusResponseDecoder =
+    Decode.succeed ActivityStatusResponse
+        |> required "instances" (Decode.list statusDecoder)
+
+
 clickDecoder : Decode.Decoder ClickEvent
 clickDecoder =
     Decode.succeed ClickEvent

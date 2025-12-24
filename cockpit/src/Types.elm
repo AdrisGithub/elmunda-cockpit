@@ -4,16 +4,13 @@ import Http
 
 
 type Msg
-    = Increment
-    | Decrement
-    | ClickedActivity ClickEvent
+    = ClickedActivity ClickEvent
     | LoadBpmn (Result Http.Error String)
     | LoadActivities (Result Http.Error ActivityStatusResponse)
 
 
 type alias Model =
-    { count : Int
-    , clickedThing : Maybe ClickEvent
+    { clickedThing : Maybe ClickEvent
     , bpmn : BpmnLoading
     , activities : ActivityLoading
     }

@@ -9,14 +9,14 @@ import Parsing exposing (errorToString, processTypeToString, statusResponseDecod
 import Types exposing (ActivityLoading(..), BpmnLoading(..), Model, Msg(..))
 
 
+main : Program () Model Msg
 main =
     Browser.element { init = init, update = update, subscriptions = subscriptions, view = view }
 
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( { count = 0
-      , clickedThing = Nothing
+    ( { clickedThing = Nothing
       , bpmn = Loading
       , activities = ALoading
       }
@@ -30,12 +30,6 @@ init _ =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Increment ->
-            ( { model | count = model.count + 1 }, Cmd.none )
-
-        Decrement ->
-            ( { model | count = model.count - 1 }, Cmd.none )
-
         ClickedActivity value ->
             ( { model | clickedThing = Just value }, Cmd.none )
 
@@ -69,10 +63,7 @@ subscriptions _ =
 view : Model -> Html Msg
 view model =
     div []
-        [ button [ onClick Decrement ] [ text "-" ]
-        , div [] [ text (String.fromInt model.count) ]
-        , button [ onClick Increment ] [ text "+" ]
-        , viewBpmn model
+        [ viewBpmn model
         , div [] [ text (viewClickedBreadCrumb model) ]
         ]
 
@@ -81,20 +72,19 @@ viewBpmn : Model -> Html Msg
 viewBpmn model =
     case model.bpmn of
         Success a ->
-            Wc.view
-                "1000px"
-                "600px"
-                (case model.activities of
-                    ASuccess value ->
+            case model.activities of
+                ASuccess value ->
+                    Wc.view
+                        "1000px"
+                        "600px"
                         value
+                        a
 
-                    AError _ ->
-                        []
+                AError error ->
+                    div [] [ text (errorToString error) ]
 
-                    ALoading ->
-                        []
-                )
-                a
+                ALoading ->
+                    div [] [ text "Loading..." ]
 
         Error err ->
             div [] [ text (errorToString err) ]

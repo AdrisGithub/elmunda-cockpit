@@ -32,6 +32,14 @@ getBpmnContent =
         }
 
 
+getInstances : Cmd Msg
+getInstances =
+    Http.get
+        { url = "http://localhost:8080/instances.json"
+        , expect = Http.expectJson LoadActivities statusResponseDecoder
+        }
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -41,12 +49,7 @@ update msg model =
         LoadBpmn bpmn ->
             case bpmn of
                 Ok value ->
-                    ( { model | bpmn = Success value }
-                    , Http.get
-                        { url = "http://localhost:8080/instances.json"
-                        , expect = Http.expectJson LoadActivities statusResponseDecoder
-                        }
-                    )
+                    ( { model | bpmn = Success value }, getInstances )
 
                 Err error ->
                     ( { model | bpmn = Error error }, Cmd.none )

@@ -43,9 +43,12 @@ export class BpmnIOIntegrationElement extends HTMLElement implements WebComponen
 
     addProcessInstanceOverlays() {
         const overlays = this.overlays;
+
+        const indicator = "process_instances_indicator";
+        overlays.remove({type: indicator});
+
         for (const activity of this._status) {
-            overlays.remove({element: activity.name});
-            overlays.add(activity.name, 'process_instances_indicator', {
+            overlays.add(activity.name, indicator, {
                 position: {
                     top: 70,
                     left: 70

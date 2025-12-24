@@ -7,6 +7,7 @@
     "watch": "npm run http-server & parcel",
     "build": "parcel build",
     "elm": "elm",
+    "lint": "elm-review",
     "http-server": "http-server --cors"
   },
   "dependencies": {
@@ -14,6 +15,7 @@
   },
   "devDependencies": {
     "elm": "^0.19.1-6",
+    "elm-review": "^2.13.4",
     "http-server": "^14.1.1"
   }
 }

@@ -8,20 +8,20 @@
 .process-instance-count {
     display: flex;
     background: white;
-    padding: 1px 1px 1px 1px;
+    padding: 1px;
     border-radius: 25%;
     border: 1px solid black;
 }
 
 .process-instance-count p {
-    padding: 0 0 0 0;
+    padding: 0;
     margin: 0 3px 0 3px;
 }
 
-.process-instance-count > :nth-child(1) {
+.process-instance-count > :first-child {
     color: blue;
 }
 
-.process-instance-count > :nth-child(2) {
+.process-instance-count > :last-child {
     color: red;
 }

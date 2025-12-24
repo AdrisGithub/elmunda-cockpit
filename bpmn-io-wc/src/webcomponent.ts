@@ -1,15 +1,15 @@
 import {default as BpmnViewerInternal} from 'bpmn-js/lib/NavigatedViewer';
 import {default as OutlineModule} from 'bpmn-js/lib/features/outline/index';
-// @ts-ignore temporary should load the bpmn from remote
-import bpmnText from 'bundle-text:../../cockpit/public/test.xml';
 import {default as Canvas} from "diagram-js/lib/core/Canvas";
 import {default as Overlays} from 'diagram-js/lib/features/overlays/Overlays';
 import {default as EventBus} from 'diagram-js/lib/core/EventBus';
 
 export class BpmnIOIntegrationElement extends HTMLElement implements WebComponent {
 
-    bpmn: BpmnViewerInternal;
+    _bpmn: BpmnViewerInternal;
     hookNode: HTMLDivElement;
+
+    _bpmnContent: string;
     _width: string;
     _height: string;
     _status: ActivityStatus[] = [];
@@ -23,17 +23,17 @@ export class BpmnIOIntegrationElement extends HTMLElement implements WebComponen
     }
 
     initBpmnViewer() {
-        this.bpmn = new BpmnViewerInternal({
+        this._bpmn = new BpmnViewerInternal({
             container: `#${wc_id}`,
             height: this._height,
             width: this._width,
             additionalModules: [OutlineModule]
         })
-        this.importXml();
+        this.importXml(this._bpmnContent)
     }
 
-    importXml() {
-        this.bpmn.importXML(bpmnText)
+    importXml(bpmn: string) {
+        this._bpmn.importXML(bpmn)
             .then(_ => this._initialized = true)
             .then(_ => this.canvas.zoom('fit-viewport'))
             .then(_ => this.removeBPMNTrademark())
@@ -63,15 +63,15 @@ export class BpmnIOIntegrationElement extends HTMLElement implements WebComponen
     }
 
     get overlays() {
-        return this.bpmn.get<Overlays>("overlays");
+        return this._bpmn.get<Overlays>("overlays");
     }
 
     get eventBus() {
-        return this.bpmn.get<EventBus>('eventBus');
+        return this._bpmn.get<EventBus>('eventBus');
     }
 
     get canvas() {
-        return this.bpmn.get<Canvas>('canvas');
+        return this._bpmn.get<Canvas>('canvas');
     }
 
     removeBPMNTrademark() {
@@ -99,6 +99,13 @@ export class BpmnIOIntegrationElement extends HTMLElement implements WebComponen
         this._height = value;
     }
 
+    set bpmn(value: string) {
+        this._bpmnContent = value;
+        if (this._initialized) {
+            this.importXml(value);
+        }
+    }
+
     set activity_status(value: ActivityStatus[]) {
         this._status = value ?? [];
         if (this._initialized) {
@@ -113,6 +120,7 @@ interface WebComponent {
     width: string
     height: string
     activity_status: ActivityStatus[]
+    bpmn: string
 }
 
 interface ActivityStatus {

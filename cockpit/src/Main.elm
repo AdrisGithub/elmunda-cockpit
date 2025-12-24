@@ -58,14 +58,25 @@ view model =
         [ button [ onClick Decrement ] [ text "-" ]
         , div [] [ text (String.fromInt model.count) ]
         , button [ onClick Increment ] [ text "+" ]
-        , Wc.view
-            "1000px"
-            "600px"
-            [ ActivityStatus "Do_Something_Activity" model.count model.count
-            , ActivityStatus "Start_Activity" 1 0
-            ]
+        , viewBpmn model
         , div [] [ text (viewClickedBreadCrumb model) ]
         ]
+
+
+viewBpmn : Model -> Html Msg
+viewBpmn model =
+    case model.bpmn of
+        Just a ->
+            Wc.view
+                "1000px"
+                "600px"
+                [ ActivityStatus "Do_Something_Activity" model.count model.count
+                , ActivityStatus "Start_Activity" 1 0
+                ]
+                a
+
+        Nothing ->
+            div [] [ text "Something went wrong. I can feel it" ]
 
 
 viewClickedBreadCrumb : Model -> String

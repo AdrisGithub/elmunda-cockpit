@@ -5,8 +5,8 @@ import Html.Attributes as Attributes
 import Html.Events exposing (on)
 import Json.Decode as Decode
 import Json.Encode as Encode
-import Parsing exposing (..)
-import Types exposing (..)
+import Parsing exposing (clickDecoder, statusToJson)
+import Types exposing (ActivityStatus, ClickEvent, Msg(..))
 
 
 bpmnIoWc : List (Attribute msg) -> List (Html msg) -> Html msg

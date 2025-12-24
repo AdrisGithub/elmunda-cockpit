@@ -1,4 +1,4 @@
-module Types exposing (..)
+module Types exposing (ActivityLoading(..), ActivityStatus, ActivityStatusResponse, BpmnLoading(..), ClickEvent, Model, Msg(..), ProcessType(..))
 
 import Http
 

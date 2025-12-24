@@ -1,10 +1,10 @@
-module Parsing exposing (..)
+module Parsing exposing (clickDecoder, errorToString, processTypeToString, statusResponseDecoder, statusToJson)
 
 import Http
 import Json.Decode as Decode
 import Json.Decode.Pipeline exposing (required)
 import Json.Encode as Encode
-import Types exposing (..)
+import Types exposing (ActivityStatus, ActivityStatusResponse, ClickEvent, ProcessType(..))
 
 
 statusToJson : ActivityStatus -> Encode.Value

@@ -2,8 +2,7 @@ module Main exposing (main)
 
 import BpmnIo as Wc
 import Browser
-import Html exposing (Html, button, div, text)
-import Html.Events exposing (onClick)
+import Html exposing (Html, div, text)
 import Http
 import Parsing exposing (errorToString, processTypeToString, statusResponseDecoder)
 import Types exposing (ActivityLoading(..), BpmnLoading(..), Model, Msg(..))
@@ -72,24 +71,29 @@ viewBpmn : Model -> Html Msg
 viewBpmn model =
     case model.bpmn of
         Success a ->
-            case model.activities of
-                ASuccess value ->
-                    Wc.view
-                        "1000px"
-                        "600px"
-                        value
-                        a
-
-                AError error ->
-                    div [] [ text (errorToString error) ]
-
-                ALoading ->
-                    div [] [ text "Loading..." ]
+            viewActivity a model
 
         Error err ->
             div [] [ text (errorToString err) ]
 
         Loading ->
+            div [] [ text "Loading..." ]
+
+
+viewActivity : String -> Model -> Html Msg
+viewActivity bpmn model =
+    case model.activities of
+        ASuccess value ->
+            Wc.view
+                "1000px"
+                "600px"
+                value
+                bpmn
+
+        AError error ->
+            div [] [ text (errorToString error) ]
+
+        ALoading ->
             div [] [ text "Loading..." ]
 
 

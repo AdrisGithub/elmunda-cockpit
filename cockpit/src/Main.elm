@@ -17,7 +17,7 @@ init : () -> ( Model, Cmd Msg )
 init _ =
     ( { count = 0
       , clickedThing = Nothing
-      , bpmn = Nothing
+      , bpmn = Loading
       }
     , Http.get
         { url = "http://localhost:8080/test.xml"
@@ -41,10 +41,10 @@ update msg model =
         LoadBpmn bpmn ->
             case bpmn of
                 Ok value ->
-                    ( { model | bpmn = Just value }, Cmd.none )
+                    ( { model | bpmn = Success value }, Cmd.none )
 
                 Err error ->
-                    ( model, Cmd.none )
+                    ( { model | bpmn = Error error }, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
@@ -66,7 +66,7 @@ view model =
 viewBpmn : Model -> Html Msg
 viewBpmn model =
     case model.bpmn of
-        Just a ->
+        Success a ->
             Wc.view
                 "1000px"
                 "600px"
@@ -75,8 +75,11 @@ viewBpmn model =
                 ]
                 a
 
-        Nothing ->
-            div [] [ text "Something went wrong. I can feel it" ]
+        Error err ->
+            div [] [ text (errorToString err) ]
+
+        Loading ->
+            div [] [ text "Loading..." ]
 
 
 viewClickedBreadCrumb : Model -> String

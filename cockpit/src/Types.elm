@@ -13,8 +13,14 @@ type Msg
 type alias Model =
     { count : Int
     , clickedThing : Maybe ClickEvent
-    , bpmn : Maybe String
+    , bpmn : BpmnLoading
     }
+
+
+type BpmnLoading
+    = Loading
+    | Error Http.Error
+    | Success String
 
 
 type alias ActivityStatus =

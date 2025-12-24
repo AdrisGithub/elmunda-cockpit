@@ -6,36 +6,37 @@ import Html exposing (Html, button, div, text)
 import Html.Events exposing (onClick)
 import Http
 import Parsing exposing (errorToString, processTypeToString, statusResponseDecoder)
-import Types exposing (ActivityLoading(..), BpmnLoading(..), Model, Msg(..))
+import Types exposing (ActivityLoading(..), BpmnLoading(..), Flags, Model, Msg(..))
 
 
-main : Program () Model Msg
+main : Program Flags Model Msg
 main =
     Browser.element { init = init, update = update, subscriptions = subscriptions, view = view }
 
 
-init : () -> ( Model, Cmd Msg )
-init _ =
+init : Flags -> ( Model, Cmd Msg )
+init flags =
     ( { clickedThing = Nothing
       , bpmn = Loading
+      , apiUrl = flags.apiUrl
       , activities = ALoading
       }
-    , getBpmnContent
+    , getBpmnContent flags.apiUrl
     )
 
 
-getBpmnContent : Cmd Msg
-getBpmnContent =
+getBpmnContent : String -> Cmd Msg
+getBpmnContent url =
     Http.get
-        { url = "http://localhost:8080/test.xml"
+        { url = url ++ "test.xml"
         , expect = Http.expectString LoadBpmn
         }
 
 
-getInstances : Cmd Msg
-getInstances =
+getInstances : String -> Cmd Msg
+getInstances url =
     Http.get
-        { url = "http://localhost:8080/instances.json"
+        { url = url ++ "instances.json"
         , expect = Http.expectJson LoadActivities statusResponseDecoder
         }
 
@@ -49,7 +50,7 @@ update msg model =
         LoadBpmn bpmn ->
             case bpmn of
                 Ok value ->
-                    ( { model | bpmn = Success value }, getInstances )
+                    ( { model | bpmn = Success value }, getInstances model.apiUrl )
 
                 Err error ->
                     ( { model | bpmn = Error error }, Cmd.none )
@@ -63,7 +64,7 @@ update msg model =
                     ( { model | activities = AError error }, Cmd.none )
 
         Reload ->
-            ( { model | activities = ALoading, bpmn = Loading }, getBpmnContent )
+            ( { model | activities = ALoading, bpmn = Loading }, getBpmnContent model.apiUrl )
 
 
 subscriptions : Model -> Sub Msg

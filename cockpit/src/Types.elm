@@ -1,4 +1,4 @@
-module Types exposing (ActivityLoading(..), ActivityStatus, ActivityStatusResponse, BpmnLoading(..), ClickEvent, Model, Msg(..), ProcessType(..))
+module Types exposing (ActivityLoading(..), ActivityStatus, ActivityStatusResponse, BpmnLoading(..), ClickEvent, Flags, Model, Msg(..), ProcessType(..))
 
 import Http
 
@@ -10,9 +10,15 @@ type Msg
     | Reload
 
 
+type alias Flags =
+    { apiUrl : String
+    }
+
+
 type alias Model =
     { clickedThing : Maybe ClickEvent
     , bpmn : BpmnLoading
+    , apiUrl : String
     , activities : ActivityLoading
     }
 

@@ -1,15 +1,19 @@
 module Types exposing (..)
 
+import Http
+
 
 type Msg
     = Increment
     | Decrement
     | ClickedActivity ClickEvent
+    | LoadBpmn (Result Http.Error String)
 
 
 type alias Model =
     { count : Int
     , clickedThing : Maybe ClickEvent
+    , bpmn : Maybe String
     }
 
 

@@ -4,14 +4,16 @@
   "description": "",
   "source": "build/index.html",
   "scripts": {
-    "watch": "parcel",
+    "watch": "npm run http-server & parcel",
     "build": "parcel build",
-    "elm": "elm"
+    "elm": "elm",
+    "http-server": "http-server --cors"
   },
   "dependencies": {
     "bpmn-io-wc": "*"
   },
   "devDependencies": {
-    "elm": "^0.19.1-6"
+    "elm": "^0.19.1-6",
+    "http-server": "^14.1.1"
   }
 }

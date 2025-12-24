@@ -1,7 +1,7 @@
 import {default as BpmnViewerInternal} from 'bpmn-js/lib/NavigatedViewer';
 import {default as OutlineModule} from 'bpmn-js/lib/features/outline/index';
 // @ts-ignore temporary should load the bpmn from remote
-import bpmnText from 'bundle-text:../../examples/test.bpmn';
+import bpmnText from 'bundle-text:../../cockpit/public/test.xml';
 import {default as Canvas} from "diagram-js/lib/core/Canvas";
 import {default as Overlays} from 'diagram-js/lib/features/overlays/Overlays';
 import {default as EventBus} from 'diagram-js/lib/core/EventBus';

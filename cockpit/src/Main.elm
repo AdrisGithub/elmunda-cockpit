@@ -2,7 +2,8 @@ module Main exposing (main)
 
 import BpmnIo as Wc
 import Browser
-import Html exposing (Html, div, text)
+import Html exposing (Html, button, div, text)
+import Html.Events exposing (onClick)
 import Http
 import Parsing exposing (errorToString, processTypeToString, statusResponseDecoder)
 import Types exposing (ActivityLoading(..), BpmnLoading(..), Model, Msg(..))
@@ -19,11 +20,16 @@ init _ =
       , bpmn = Loading
       , activities = ALoading
       }
-    , Http.get
+    , getBpmnContent
+    )
+
+
+getBpmnContent : Cmd Msg
+getBpmnContent =
+    Http.get
         { url = "http://localhost:8080/test.xml"
         , expect = Http.expectString LoadBpmn
         }
-    )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -53,6 +59,9 @@ update msg model =
                 Err error ->
                     ( { model | activities = AError error }, Cmd.none )
 
+        Reload ->
+            ( { model | activities = ALoading, bpmn = Loading }, getBpmnContent )
+
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
@@ -64,6 +73,7 @@ view model =
     div []
         [ viewBpmn model
         , div [] [ text (viewClickedBreadCrumb model) ]
+        , button [ onClick Reload ] [ text "Reload" ]
         ]
 
 

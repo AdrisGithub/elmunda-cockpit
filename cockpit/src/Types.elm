@@ -7,6 +7,7 @@ type Msg
     = ClickedActivity ClickEvent
     | LoadBpmn (Result Http.Error String)
     | LoadActivities (Result Http.Error ActivityStatusResponse)
+    | Reload
 
 
 type alias Model =

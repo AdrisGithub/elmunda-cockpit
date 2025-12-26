@@ -1,25 +1,37 @@
 module Main exposing (main)
 
 import BpmnIo as Wc
-import Browser exposing (Document)
-import Html exposing (Html, button, div, text)
+import Browser
+import Browser.Navigation as Navigation
+import Html exposing (Html, a, br, button, div, li, p, text)
+import Html.Attributes exposing (href)
 import Html.Events exposing (onClick)
 import Http
 import Parsing exposing (errorToString, processTypeToString, statusResponseDecoder)
 import Types exposing (ActivityLoading(..), BpmnLoading(..), Flags, Model, Msg(..))
+import Url
 
 
 main : Program Flags Model Msg
 main =
-    Browser.document { init = init, update = update, subscriptions = subscriptions, view = view }
+    Browser.application
+        { init = init
+        , update = update
+        , subscriptions = subscriptions
+        , view = view
+        , onUrlChange = UrlChanged
+        , onUrlRequest = LinkClicked
+        }
 
 
-init : Flags -> ( Model, Cmd Msg )
-init flags =
+init : Flags -> Url.Url -> Navigation.Key -> ( Model, Cmd Msg )
+init flags url nav =
     ( { clickedThing = Nothing
       , bpmn = Loading
       , apiUrl = flags.apiUrl
       , activities = ALoading
+      , key = nav
+      , url = url
       }
     , getBpmnContent flags.apiUrl
     )
@@ -66,19 +78,36 @@ update msg model =
         Reload ->
             ( { model | activities = ALoading, bpmn = Loading }, getBpmnContent model.apiUrl )
 
+        LinkClicked urlRequest ->
+            case urlRequest of
+                Browser.Internal url ->
+                    ( model, Navigation.pushUrl model.key (Url.toString url) )
+
+                Browser.External href ->
+                    ( model, Navigation.load href )
+
+        UrlChanged url ->
+            ( { model | url = url }, Cmd.none )
+
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
     Sub.none
 
 
-view : Model -> Document Msg
+view : Model -> Browser.Document Msg
 view model =
     { title = "Elmunda Cockpit"
     , body =
         [ viewBpmn model
         , div [] [ text (viewClickedBreadCrumb model) ]
         , button [ onClick Reload ] [ text "Reload" ]
+        , br [] []
+        , div []
+            [ a [ href "/home" ] [ text "/home" ]
+            , p [] [ text (Url.toString model.url) ]
+            , a [ href "/idk" ] [ text "/idk" ]
+            ]
         ]
     }
 

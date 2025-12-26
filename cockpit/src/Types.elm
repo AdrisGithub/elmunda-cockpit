@@ -1,6 +1,9 @@
 module Types exposing (ActivityLoading(..), ActivityStatus, ActivityStatusResponse, BpmnLoading(..), ClickEvent, Flags, Model, Msg(..), ProcessType(..))
 
+import Browser
+import Browser.Navigation as Nav
 import Http
+import Url
 
 
 type Msg
@@ -8,6 +11,8 @@ type Msg
     | LoadBpmn (Result Http.Error String)
     | LoadActivities (Result Http.Error ActivityStatusResponse)
     | Reload
+    | LinkClicked Browser.UrlRequest
+    | UrlChanged Url.Url
 
 
 type alias Flags =
@@ -20,6 +25,8 @@ type alias Model =
     , bpmn : BpmnLoading
     , apiUrl : String
     , activities : ActivityLoading
+    , key : Nav.Key
+    , url : Url.Url
     }
 
 

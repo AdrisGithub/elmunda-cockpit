@@ -2,7 +2,8 @@ module Main exposing (main)
 
 import BpmnIo as Wc
 import Browser exposing (Document)
-import Html exposing (Html, button, div, text)
+import Html exposing (Html, article, button, div, text)
+import Html.Attributes exposing (attribute)
 import Html.Events exposing (onClick)
 import Http
 import Parsing exposing (errorToString, processTypeToString, statusResponseDecoder)
@@ -76,9 +77,11 @@ view : Model -> Document Msg
 view model =
     { title = "Elmunda Cockpit"
     , body =
-        [ viewBpmn model
-        , div [] [ text (viewClickedBreadCrumb model) ]
-        , button [ onClick Reload ] [ text "Reload" ]
+        [ article [ attribute "data-theme" "light" ]
+            [ viewBpmn model
+            , div [] [ text (viewClickedBreadCrumb model) ]
+            , button [ onClick Reload ] [ text "Reload" ]
+            ]
         ]
     }
 

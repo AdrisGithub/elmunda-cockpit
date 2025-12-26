@@ -1,5 +1,6 @@
 import {Elm} from "../src/Main.elm";
 import {registerWebcomponent} from 'bpmn-io-wc';
+import './styles.css';
 
 registerWebcomponent();
 

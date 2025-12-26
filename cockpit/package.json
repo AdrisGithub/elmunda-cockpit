@@ -11,6 +11,7 @@
     "http-server": "http-server --cors"
   },
   "dependencies": {
+    "@picocss/pico": "^2.1.1",
     "bpmn-io-wc": "*"
   },
   "devDependencies": {

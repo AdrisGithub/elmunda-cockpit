@@ -21,7 +21,7 @@ init flags =
       , bpmn = Loading
       , apiUrl = flags.apiUrl
       , activities = ALoading
-      , isLight = True
+      , isLight = not flags.darkMode
       }
     , getBpmnContent flags.apiUrl
     )
@@ -90,7 +90,7 @@ view : Model -> Document Msg
 view model =
     { title = "Elmunda Cockpit"
     , body =
-        [ article [ attribute "data-theme" "light" ]
+        [ article [ attribute "data-theme" (setTheme model.isLight) ]
             [ viewBpmn model
             , div [] [ text (viewClickedBreadCrumb model) ]
             , button [ onClick Reload ] [ text "Reload" ]

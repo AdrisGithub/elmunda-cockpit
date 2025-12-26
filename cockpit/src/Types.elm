@@ -13,6 +13,7 @@ type Msg
 
 type alias Flags =
     { apiUrl : String
+    , darkMode : Bool
     }
 
 

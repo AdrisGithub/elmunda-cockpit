@@ -4,9 +4,16 @@ import './styles.css';
 
 registerWebcomponent();
 
+let darkMode = false;
+
+if (window.matchMedia) {
+    darkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+}
+
 Elm.Main.init({
     node: document.getElementById("root"),
     flags: {
-        apiUrl: "http://localhost:8080/"
+        apiUrl: "http://localhost:8080/",
+        darkMode
     }
 });

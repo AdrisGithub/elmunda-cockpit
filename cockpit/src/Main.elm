@@ -1,7 +1,7 @@
 module Main exposing (main)
 
 import BpmnIo as Wc
-import Browser
+import Browser exposing (Document)
 import Html exposing (Html, button, div, text)
 import Html.Events exposing (onClick)
 import Http
@@ -11,7 +11,7 @@ import Types exposing (ActivityLoading(..), BpmnLoading(..), Flags, Model, Msg(.
 
 main : Program Flags Model Msg
 main =
-    Browser.element { init = init, update = update, subscriptions = subscriptions, view = view }
+    Browser.document { init = init, update = update, subscriptions = subscriptions, view = view }
 
 
 init : Flags -> ( Model, Cmd Msg )
@@ -72,13 +72,15 @@ subscriptions _ =
     Sub.none
 
 
-view : Model -> Html Msg
+view : Model -> Document Msg
 view model =
-    div []
+    { title = "Elmunda Cockpit"
+    , body =
         [ viewBpmn model
         , div [] [ text (viewClickedBreadCrumb model) ]
         , button [ onClick Reload ] [ text "Reload" ]
         ]
+    }
 
 
 viewBpmn : Model -> Html Msg

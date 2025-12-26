@@ -8,6 +8,7 @@ type Msg
     | LoadBpmn (Result Http.Error String)
     | LoadActivities (Result Http.Error ActivityStatusResponse)
     | Reload
+    | FlipColorScheme
 
 
 type alias Flags =
@@ -20,6 +21,7 @@ type alias Model =
     , bpmn : BpmnLoading
     , apiUrl : String
     , activities : ActivityLoading
+    , isLight : Bool
     }
 
 

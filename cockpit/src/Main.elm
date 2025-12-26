@@ -21,6 +21,7 @@ init flags =
       , bpmn = Loading
       , apiUrl = flags.apiUrl
       , activities = ALoading
+      , isLight = True
       }
     , getBpmnContent flags.apiUrl
     )
@@ -67,6 +68,18 @@ update msg model =
         Reload ->
             ( { model | activities = ALoading, bpmn = Loading }, getBpmnContent model.apiUrl )
 
+        FlipColorScheme ->
+            ( { model | isLight = not model.isLight }, Cmd.none )
+
+
+setTheme : Bool -> String
+setTheme bool =
+    if bool then
+        "light"
+
+    else
+        "dark"
+
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
@@ -81,6 +94,7 @@ view model =
             [ viewBpmn model
             , div [] [ text (viewClickedBreadCrumb model) ]
             , button [ onClick Reload ] [ text "Reload" ]
+            , button [ onClick FlipColorScheme ] [ text "Flip Color Scheme" ]
             ]
         ]
     }
